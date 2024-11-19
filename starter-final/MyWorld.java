@@ -8,14 +8,21 @@ import greenfoot.*;
  */
 public class MyWorld extends World
 {
+    private long lastFrameTimeMS;
+    private double timeStepDuration;
+
+    /* Everything here is a work in progress*/
 
     /**
-     * Constructor for objects of class MyWorld.
+     * Constructor for objects of class MyWorld. 
      */
     public MyWorld()
     {
         super(800, 600, 1);
         prepare();
+        
+        lastFrameTimeMS = System.currentTimeMillis();
+        timeStepDuration = 1.0 / 60;
     }
 
     /**
@@ -82,5 +89,22 @@ public class MyWorld extends World
         cannonBall6.setLocation(616, 177);
         cannonBall.setLocation(220, 103);
         cannonBall2.setLocation(338, 94);
+    }
+
+    /**
+     * 
+     */
+    public void act()
+    {
+        timeStepDuration = (System.currentTimeMillis() - lastFrameTimeMS) / 1000.0;
+        lastFrameTimeMS = System.currentTimeMillis();
+    }
+
+    /**
+     * 
+     */
+    public double getTimeStepDuration()
+    {
+        return timeStepDuration;
     }
 }

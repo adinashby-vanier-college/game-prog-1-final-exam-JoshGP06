@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class name="CannonBall" extends="Actor" enable="true" strideversion="1">
+<class name="CannonBall" extends="Actor" extends-java="Actor" enable="true" strideversion="1">
     <javadoc xml:space="preserve"/>
     <imports>
         <import target="java.util.*" enable="true"/>
@@ -7,13 +7,76 @@
     </imports>
     <implements/>
     <fields/>
-    <constructors/>
+    <constructors>
+        <constructor access="public" enable="true">
+            <javadoc xml:space="preserve"/>
+            <params/>
+            <throws/>
+            <body>
+                <assign dest="position" dest-java="position" src="null" src-java="null" enable="false"/>
+                <assign dest="velocity" dest-java="velocity" src="new Vector(0.0,0.0)" src-java=" new Vector(0.0, 0.0)" enable="false"/>
+            </body>
+        </constructor>
+    </constructors>
     <methods>
-        <method access="public" type="void" name="act" enable="true">
+        <method access="public" type="void" type-java="void" name="act" enable="true">
             <javadoc xml:space="preserve">Act - do whatever the CannonBall wants to do. This method is called whenever the 'Act' or 'Run' button gets pressed in the environment.</javadoc>
             <params/>
             <throws/>
-            <body/>
+            <body>
+                <if condition="position==null" condition-java="position == null" enable="false">
+                    <ifStatements>
+                        <assign dest="position" dest-java="position" src="new Point2D(getX(),getY())" src-java=" new Point2D(getX(), getY())" enable="false"/>
+                    </ifStatements>
+                </if>
+                <variable type="MyWorld" type-java="MyWorld" name="world" value="(MyWorld)getWorld()" value-java="(MyWorld)getWorld()" enable="false"/>
+                <call expression="Collision()" expression-java="Collision()" enable="true"/>
+                <if condition="Lost()" condition-java="Lost()" enable="true">
+                    <ifStatements>
+                        <call expression="transitionToGameLostWorld()" expression-java="transitionToGameLostWorld()" enable="true"/>
+                    </ifStatements>
+                </if>
+            </body>
+        </method>
+        <method access="public" type="void" type-java="void" name="Collision" enable="true">
+            <javadoc xml:space="preserve">What happens when the cannonballs hit the ladybug</javadoc>
+            <params/>
+            <throws/>
+            <body>
+                <variable type="Actor" type-java="Actor" name="Ladybug" value="getOneIntersectingObject(Ladybug.class)" value-java="getOneIntersectingObject(Ladybug.class)" enable="true"/>
+                <if condition="Ladybug!=null" condition-java="Ladybug != null" enable="true">
+                    <ifStatements>
+                        <variable type="World" type-java="World" name="world" value="getWorld()" value-java="getWorld()" enable="true"/>
+                        <call expression="world.removeObject(Ladybug)" expression-java="world.removeObject(Ladybug)" enable="true"/>
+                        <call expression="Greenfoot.playSound(&quot;lose.wav&quot;)" expression-java="Greenfoot.playSound(&quot;lose.wav&quot;)" enable="true"/>
+                    </ifStatements>
+                </if>
+            </body>
+        </method>
+        <method access="public" type="boolean" type-java="boolean" name="Lost" enable="true">
+            <javadoc xml:space="preserve">Moves player to lose screen</javadoc>
+            <params/>
+            <throws/>
+            <body>
+                <variable type="World" type-java="World" name="world" value="getWorld()" value-java="getWorld()" enable="true"/>
+                <if condition="world.getObjects(Ladybug.class).isEmpty()" condition-java="world.getObjects(Ladybug.class).isEmpty()" enable="true">
+                    <ifStatements>
+                        <return value="true" value-java="true" enable="true"/>
+                    </ifStatements>
+                    <else>
+                        <return value="false" value-java="false" enable="true"/>
+                    </else>
+                </if>
+            </body>
+        </method>
+        <method access="public" type="void" type-java="void" name="transitionToGameLostWorld" enable="true">
+            <javadoc xml:space="preserve">Also moves player to lose screen</javadoc>
+            <params/>
+            <throws/>
+            <body>
+                <variable type="World" type-java="World" name="IsGameLost" value="new IsGameLost()" value-java=" new IsGameLost()" enable="true"/>
+                <call expression="Greenfoot.setWorld(IsGameLost)" expression-java="Greenfoot.setWorld(IsGameLost)" enable="true"/>
+            </body>
         </method>
     </methods>
 </class>
